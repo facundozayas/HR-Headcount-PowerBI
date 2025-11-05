@@ -1,4 +1,6 @@
-Folder Structure
+## 🗂️ Folder Structure
+
+```
 HR-Headcount-Dashboard/
 ├── README.md
 ├── powerbi/HR_Headcount.pbix
@@ -10,7 +12,7 @@ HR-Headcount-Dashboard/
 │   └── Calculations_DAX.txt
 ├── data/sample_data.csv
 └── LICENSE
-
+```
 # HR-Headcount-PowerBI
 HR Headcount &amp; People Analytics Dashboard
 **Project type:** Power BI dashboard / Data analysis  
