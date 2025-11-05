@@ -26,8 +26,10 @@ The dataset contains HR records (combined from four annual tables: 2016–2019) 
 - Employment attributes: `Position`, `Department`, `ManagerName`, `ManagerID`, `RecruitmentSource`.
 - Employment dates and reasons: `HireDate`, `TerminationDate`, `TermReason`, `EmploymentStatus`.
 - Performance & compensation: `PerformanceScore`, `EmpSatisfaction`, `Annual Salary`, `Bonus`.
+<img width="440" height="265" alt="image" src="https://github.com/user-attachments/assets/35e05cb5-7da0-4a5b-af74-96c83eeb288f" />
 
-Full project documentation and the ER diagram are provided in the original project file. :contentReference[oaicite:1]{index=1}
+
+Full project documentation and the ER diagram are provided in the original project file, please contact me if you want the file (zayasfacundonicolas@gmail.com)
 
 ---
 
@@ -44,3 +46,101 @@ Key preprocessing steps performed in Power Query / data model:
 - **Age**:
   ```dax
   Age = YEAR(TODAY()) - YEAR(HeadCount[BirthDate])
+Age Group / Range: < 30, 30–50, > 50
+
+***Salary Quartile (example logic)***
+ ```dax
+Quartile = 
+  IF(HeadCount[Annual Salary] <= PERCENTILE.INC(HeadCount[Annual Salary], 0.25), "Q1",
+    IF(HeadCount[Annual Salary] <= PERCENTILE.INC(HeadCount[Annual Salary], 0.5), "Q2",
+      IF(HeadCount[Annual Salary] <= PERCENTILE.INC(HeadCount[Annual Salary], 0.75), "Q3", "Q4")))
+```
+###Key measures (DAX examples)
+
+***Active employees***
+```dax
+Active_Employees = CALCULATE(DISTINCTCOUNT(HeadCount[ID]), HeadCount[EmploymentStatus] = "Active")
+```
+
+***Absenteeism***
+```dax
+Absenteeism = CALCULATE(DISTINCTCOUNT(HeadCount[ID]), HeadCount[EmploymentStatus] = "Leave of Absence")
+```
+***Terminated for cause****
+```dax
+Terminated = CALCULATE(DISTINCTCOUNT(HeadCount[ID]), HeadCount[EmploymentStatus] = "Terminated for Cause")
+```
+***Voluntary exits***
+```dax
+Voluntary_Exits = CALCULATE(DISTINCTCOUNT(HeadCount[ID]), HeadCount[EmploymentStatus] = "Voluntarily Terminated
+```
+***Total turnover***
+```dax
+Total_Turnover = ([Terminated] + [Voluntary_Exits]) / [HeadCount_Total]
+```
+***Workforce availability***
+```dax
+Workforce_Availability = 1 - ([Absenteeism] / [HeadCount_Total])
+```
+***Average salary / satisfaction***
+```dax
+Avg_Salary = AVERAGE(HeadCount[Annual Salary])
+Avg_Satisfaction = AVERAGE(HeadCount[EmpSatisfaction])
+```
+_____________________________________________________________________________________
+Dashboard pages & visuals
+
+The Power BI report is organized into four pages, each focused on a different analytical perspective:
+
+### Page 1 — Executive Summary
+
+KPIs: average satisfaction, active headcount, total employees, historical exit rate.
+
+Lollipop chart: headcount by year (growth).
+
+Bar chart: average satisfaction by salary quartile.
+
+Area chart: terminated employees by department (historic vs yearly).
+
+Radar chart: department comparison (performance, satisfaction, gender %).
+
+<img width="705" height="398" alt="image" src="https://github.com/user-attachments/assets/3ff0d011-b7cd-446b-b51c-0b1105df823c" />
+
+
+### Page 2 — Age and Gender Analysis
+
+Filters: Department, Year, Position Level, Nationality.
+
+KPI cards by gender (active employees, turnover %).
+
+Boxplots: salary distribution by gender.
+
+Bar charts: performance and satisfaction comparison by age group and quartile.
+
+<img width="872" height="473" alt="image" src="https://github.com/user-attachments/assets/8ecdcdf3-15fa-4dd0-8174-ba8966b4aa94" />
+
+
+### Page 3 — Teams & Managers
+
+Filters: Top 5 managers, Level, Year, Department.
+
+KPIs: employees per manager, availability %, avg satisfaction.
+
+Journey / bubble chart: department → level → managers → employees.
+
+Treemap: hierarchical view by department and positions.
+
+<img width="882" height="504" alt="image" src="https://github.com/user-attachments/assets/c0f3ba23-b18b-44e1-aed8-68bdffb9ade9" />
+
+
+## Key insights & recommendations
+
+Salary vs satisfaction: employees in the lowest salary quartile show significantly lower satisfaction — consider targeted incentives (salary review or non-monetary perks).
+
+Age distribution & career paths: fewer employees >50 and limited representation at higher levels — implement career-path programs to reduce implicit age barriers.
+
+Manager concentration: top managers with the most direct reports are concentrated in production — evaluate span of control and consider redistributing responsibilities to increase horizontal structure.
+These recommendations are derived from the exploratory analyses and visualizations included in the report. 
+
+Proyecto coder GALEANO-ZAYAS
+
